@@ -10,18 +10,11 @@ from PIL import Image
 from pdb import set_trace
 class visRL(Env):
     """
-    Interactive environment. The agent could take five actions: pick up and moving up, down, left, and right. 
-    To simplify the problem, the world was discretized as eight-by-eight grid points. The actions moved the agent 
-    to a neighboring grid point unless it hit the boundary or an obstacle. It received an award when it took the 
-    pick-up action on the spot of food. For each action, the world provided a reward as the feedback. The agent 
-    earned a positive reward of 5 when it picked up food and a penalty of -0.5 when it hit boundaries or trees. 
-    Zero-reward was provided for any other situations. 
-
-    The environment API follows OpenAI Gym. Example usage:
-    env = visRL()
-    initial_state = env.reset()
-    action = 5
-    next_state, reward, done, info = env.step(action)
+    The background map is compressed at initialization. This will speedup the training. If need better visulization, we need save a clear version of image
+    Update 2020.3.27: add blocks to the map. When resetting the game, can choose either reset the blocks or not. 
+    Update 2020.4.22: Use the new desert map. Use PIL library to add foreground objects to the map. Discard obstacle handling class.
+                      Note that pasting all objects to the 512*512 map takes 0.01s. No need to speedup plotting part.
+                      Note that 'env.range' is changed to 'env.mapsize'. Accordingly change this parameter name in "run.py" and "utils.py"
     """
     def __init__(self, figpath='./objects/', bkg_path=None, map_size = [8, 8], bkg_size = [64, 64], n_obstacles=0,gray_img=False, n_random_features=0):
         """
@@ -182,7 +175,7 @@ class visRL(Env):
             size = np.array(img.size)
             size = (size*ratio).astype('int')
             img = img.resize(size)
-            return 
+            return
         if bkg_path is None:
             bkg_path = os.path.join(path, "bkg7.png")
         self.bkg  = Image.open(bkg_path)
@@ -385,7 +378,14 @@ def test():
     k = env.render(True)
     while True:
         if k == ord('q'): break
-        s, reward, done, info = env.step(int(chr(k)))
+        action = {
+        ord('w'): 0,
+        ord('s'): 1,
+        ord('a'): 2,
+        ord('d'): 3,
+        ord(' '): 4,
+        }[k]
+        s, reward, done, info = env.step(action)
         if done: print('Done..')
         print(env.x, reward, s.shape)
         k = env.render(True)

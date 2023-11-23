@@ -266,7 +266,17 @@ class DeepQNetwork:
         regularizer = tf.contrib.layers.l1_regularizer(0.01, scope=None)
         with tf.variable_scope(name):
             with tf.variable_scope('rl'):
-                conv1 = tf.layers.conv2d(inputs = input1,
+                conv0 = tf.layers.conv2d(inputs = input1,
+                    filters=32,
+                    kernel_size = [20,20],
+                    padding = 'same',
+                    #strides = 4,
+                    activation=activation,
+                    kernel_initializer=initializer, bias_initializer=initializer,
+                    kernel_regularizer=regularizer, bias_regularizer=regularizer,
+                    )
+                pool0 = tf.layers.max_pooling2d(inputs=conv0, pool_size=[2, 2], strides=2)
+                conv1 = tf.layers.conv2d(inputs = pool0,
                     filters=32,
                     kernel_size = [8,8],
                     padding = 'same',

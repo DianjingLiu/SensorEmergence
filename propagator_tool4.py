@@ -73,6 +73,7 @@ def propagator_compute(dim_obj, len_obj, dim_mod, len_mod, dist, mylambda):
     
     return tf.cast(propagator1_2d_real, tf.float32), tf.cast(propagator1_2d_imag, tf.float32)
 
+
 def lens_initialize(dim_mod, focal_lens, len_modulator):
     import tensorflow as tf
     import numpy as np
@@ -82,8 +83,8 @@ def lens_initialize(dim_mod, focal_lens, len_modulator):
     # make sure there are points at the edge
     coordx = (np.arange(1, dim_mod + 1) - (1 + dim_mod) / 2.) / dim_mod * len_modulator * dim_mod / (dim_mod - 1);
     coordy = (np.arange(1, dim_mod + 1) - (1 + dim_mod) / 2.) / dim_mod * len_modulator * dim_mod / (dim_mod - 1);
-    #coordx = (np.arange(1, dim_mod + 1) - (1 + dim_mod) / 2.) / dim_mod * len_modulator;
-    #coordy = (np.arange(1, dim_mod + 1) - (1 + dim_mod) / 2.) / dim_mod * len_modulator;
+    # coordx = (np.arange(1, dim_mod + 1) - (1 + dim_mod) / 2.) / dim_mod * len_modulator;
+    # coordy = (np.arange(1, dim_mod + 1) - (1 + dim_mod) / 2.) / dim_mod * len_modulator;
     coordx_matrix, coordy_matrix = np.meshgrid(coordx, coordy);
     coordx_matrix = coordx_matrix.T
     coordy_matrix = coordy_matrix.T

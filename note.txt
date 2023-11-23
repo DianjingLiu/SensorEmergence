@@ -1,0 +1,40 @@
+In test 8 / log 3 (see server directory), we are able to get a strange shaped modulator. The agent is able to play with it.
+
+In this case study, we try to construct a more complex background image. See if the visual task difficulty encourages a better shaped modulator.
+
+From the test in study1, we updated the learning rate for modulator (unitchange).
+Fixed the version mismatch in "propagator_tool4.py".
+
+The goal for study1-1 is to get a presentable result in which the complex bkg results in a good lens. We attend to get this by:
+1. Adjust modulator and DQN learning rate.
+2. Try to get a more complex bkg
+
+cmd for baseline3_rep:
+CUDA_VISIBLE_DEVICES=0 python3 run.py -bkg objects/bkg7.png -p log -m models -lr_mod 8e-6 1e4 0.9 -score
+
+
+===================================================
+study_rgb:
+in the previous simluations, we used RGB images. But the wavelength was the same (500nm) for all channels.
+We fix this issue 
+optical_dqn      --> optical_dqn_rgb
+propagator_tool4 --> propagator_tool4_rgb
+
+note 2021.3.16: 
+1. we removed l2_normalize in the propagation calculation. The operation makes the resulting image color unreal. Instead, we use a fixed factor to scale the numbers
+2. we added the dispersion. considered the refractive index change for R/G/B channels
+3. it seems using different wavelengths in propagators P1 and P2 makes the color of the final image different.
+
+TODO 2021.3.16:
+1. benchmark again to make sure the code is correct. 
+2. If the code is correct, check the simulation results in /home/Data/Dianjing/lensnet_baseline_rgb/
+otherwise, abandom the simulation
+
+training logs:
+-- rgb1: object field scaled by the same factor. l2 normalized. succeed
+object field scaled by /lambda**2. sensor image scaled by a fixed factor 1e-4
+-- rgb2. lr_mod=[3e-6 10000 0.96]. failed
+-- rgb3. lr_mod=[8e-6 10000 0.96]. failed
+-- (deleted) lr_mod=[8e-6 10000 0.96]. failed
+
+object field scaled by /lambda**2. before feeding into CNN, normalize each channel by l2 norm. and multiply the image by 60
